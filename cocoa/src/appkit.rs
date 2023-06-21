@@ -2771,8 +2771,8 @@ pub trait NSEvent: Sized {
     unsafe fn isSwipeTrackingFromScrollEventsEnabled(_: Self) -> BOOL;
 
     // Monitoring Application Events
-    // TODO: addGlobalMonitorForEventsMatchingMask_handler_ (unsure how to bind to blocks)
-    // TODO: addLocalMonitorForEventsMatchingMask_handler_ (unsure how to bind to blocks)
+    unsafe fn addGlobalMonitorForEventsMatchingMask_handler_(_: Self, mask: NSEventMask, handler: *mut Block<(id /* (NSEvent *) */,), ()>) -> id;
+    unsafe fn addLocalMonitorForEventsMatchingMask_handler_(_: Self, mask: NSEventMask, handler: *mut Block<(id /* (NSEvent *) */,), id>) -> id;
     unsafe fn removeMonitor_(_: Self, eventMonitor: id);
 
     // Scroll Wheel and Flick Events
@@ -3149,8 +3149,13 @@ impl NSEvent for id {
 
     // Monitoring Application Events
 
-    // TODO: addGlobalMonitorForEventsMatchingMask_handler_ (unsure how to bind to blocks)
-    // TODO: addLocalMonitorForEventsMatchingMask_handler_ (unsure how to bind to blocks)
+    unsafe fn addGlobalMonitorForEventsMatchingMask_handler_(_: Self, mask: NSEventMask, handler: *mut Block<(id /* (NSEvent *) */,), ()>) -> id {
+        msg_send![class!(NSEvent), addGlobalMonitorForEventsMatchingMask:mask handler:handler]
+    }
+
+    unsafe fn addLocalMonitorForEventsMatchingMask_handler_(_: Self, mask: NSEventMask, handler: *mut Block<(id /* (NSEvent *) */,), id>) -> id {
+        msg_send![class!(NSEvent), addLocalMonitorForEventsMatchingMask:mask handler:handler]
+    }
 
     unsafe fn removeMonitor_(_: Self, eventMonitor: id) {
         msg_send![class!(NSEvent), removeMonitor:eventMonitor]
